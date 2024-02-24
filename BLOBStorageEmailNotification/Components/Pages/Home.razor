@@ -1,0 +1,63 @@
+﻿@page "/"
+@using ReenbitTestTask.Models
+@using ReenbitTestTask.Services
+@rendermode InteractiveServer
+@inject IFileCloudManagerService fileCloudManager
+
+<PageTitle>Home</PageTitle>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Email" OnValidSubmit="SendFile" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="title" class="form-label">Email:</label>
+                <InputText id="email" @bind-Value="Email.EmailAdress" class="form-control" />
+                <ValidationMessage For="() => Email" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="fileUpload" class="form-label">Upload .docx File:</label>
+                <InputFile id="fileUpload" class="form-control" OnChange="HandleSelection" accept=".docx" />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+            @if (showSuccessMessage)
+            {
+                <div class="alert alert-success mt-3" role="alert">
+                    Operation successful!
+                </div>
+            }
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    const int MAX_FILE_SIZE = 1024 * 1024 * 5;
+
+    [SupplyParameterFromForm]
+    public EmailModel Email { get; set; } = new EmailModel();
+
+    private IBrowserFile? selectedFile;
+    private bool showSuccessMessage = false;
+    private List<string> errors = new();
+
+    public async Task SendFile()
+    {
+        if (selectedFile != null)
+        {
+            try
+            {
+                showSuccessMessage = await fileCloudManager.UploadFileAsync(selectedFile);
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"{selectedFile.Name} Error:{ex.Message}");
+            }
+        }
+    }
+    private void HandleSelection(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+    }
+}
