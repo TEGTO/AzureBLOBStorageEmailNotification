@@ -8,11 +8,13 @@
 		<UserSecretsId>304acc9c-0baa-4df5-9398-82b75b5a3121</UserSecretsId>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.21.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.ApplicationInsights" Version="1.0.0" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Blobs" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.16.2" />
+		<PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.2.0" />
 		<!-- Update this version -->
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
 		<PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />

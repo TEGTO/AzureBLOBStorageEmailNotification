@@ -8,6 +8,6 @@ namespace AzureEmailBLOBTrigger.Sevices
 {
     public interface IEmailNotificator
     {
-        public void SendEmail(string email, string title, string emailBody);
+        public Task SendEmail(string email, string title, string emailBody);
     }
 }
