@@ -4,6 +4,6 @@ namespace ReenbitTestTask.Services
 {
     public interface IFileCloudManagerService
     {
-        public Task<bool> UploadFileAsync(IBrowserFile file);
+        public Task UploadFileAsync(IBrowserFile file, string email);
     }
 }

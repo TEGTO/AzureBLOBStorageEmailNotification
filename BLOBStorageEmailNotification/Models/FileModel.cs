@@ -2,11 +2,9 @@
 
 namespace ReenbitTestTask.Models
 {
-    public class EmailModel
+    public class EmailDistributionModel
     {
         [Required, EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string EmailAdress { get; set; }
-        public string? FileLink { get; set; }
-
     }
 }
