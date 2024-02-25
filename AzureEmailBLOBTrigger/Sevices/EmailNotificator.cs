@@ -1,24 +1,25 @@
 ﻿using Azure;
 using Azure.Communication.Email;
+using AzureEmailBLOBTrigger.Options;
+using Microsoft.Extensions.Options;
 
 namespace AzureEmailBLOBTrigger.Sevices
 {
     public class EmailNotificator : IEmailNotificator
     {
-        private const string CONNECTION_STRING = "";
-        private const string EMAIL_FROM = "";
+        private readonly EmailClient emailClient;
+        private readonly EmailSendOptions configuration;
 
-        private EmailClient emailClient;
-
-        public EmailNotificator()
+        public EmailNotificator(EmailClient emailClient, IOptions<EmailSendOptions> configuration)
         {
-            emailClient = new EmailClient(CONNECTION_STRING);
+            this.configuration = configuration.Value;
+            this.emailClient = emailClient;
         }
         public async Task SendEmail(string email, string title, string emailBody)
         {
             await emailClient.SendAsync(
                 WaitUntil.Completed,
-                senderAddress: EMAIL_FROM,
+                senderAddress: configuration.EmailFromAddress,
                 recipientAddress: email,
                 subject: title,
                 htmlContent: emailBody

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 
-namespace ReenbitTestTask.Services
+namespace BLOBStorageEmailNotificationServer.Services
 {
     public interface IFileCloudManagerService
     {

@@ -2,28 +2,29 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
 using Azure.Storage.Sas;
+using AzureEmailBLOBTrigger.Options;
 using AzureEmailBLOBTrigger.Sevices;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Text.RegularExpressions;
 
 namespace AzureEmailBLOBTrigger
 {
     public class EmailSendFunction
     {
-        private const string CONTAINER_NAME = "files";
-        private const string ORIGINAL_FILE_NAME_PATTERN = @"(.*-&\$)";
-
         private readonly ILogger<EmailSendFunction> logger;
         private readonly IEmailNotificator emailNotificator;
+        private readonly EmailSendOptions configuration;
 
-        public EmailSendFunction(ILogger<EmailSendFunction> logger, IEmailNotificator emailNotificator)
+        public EmailSendFunction(ILogger<EmailSendFunction> logger, IEmailNotificator emailNotificator, IOptions<EmailSendOptions> configuration)
         {
             this.logger = logger;
             this.emailNotificator = emailNotificator;
+            this.configuration = configuration.Value;
         }
         [Function(nameof(EmailSendFunction))]
-        public async Task Run([BlobTrigger(CONTAINER_NAME + "/{name}")] BlobClient blobClient, string name)
+        public async Task Run([BlobTrigger("%importcontainer%/{name}")] BlobClient blobClient, string name)
         {
             try
             {
@@ -52,7 +53,7 @@ namespace AzureEmailBLOBTrigger
                     BlobName = blobClient.Name,
                     Resource = "b"
                 };
-                sasBuilder.ExpiresOn = DateTimeOffset.UtcNow.AddHours(1);
+                sasBuilder.ExpiresOn = DateTimeOffset.UtcNow.AddHours(configuration.EmailMessageExpirationHours);
                 sasBuilder.SetPermissions(BlobContainerSasPermissions.Read);
                 Uri sasURI = blobClient.GenerateSasUri(sasBuilder);
                 return sasURI;
@@ -64,7 +65,7 @@ namespace AzureEmailBLOBTrigger
             metadata != null && metadata.ContainsKey("email");
         private string GetOriginalFileName(string fileName)
         {
-            Match match = Regex.Match(fileName, ORIGINAL_FILE_NAME_PATTERN);
+            Match match = Regex.Match(fileName, configuration.FileNameRegex);
             return fileName.Substring(match.Length);
         }
     }

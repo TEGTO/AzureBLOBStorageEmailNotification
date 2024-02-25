@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ReenbitTestTask.Models
+namespace BLOBStorageEmailNotificationServer.Models
 {
     public class EmailDistributionModel
     {
