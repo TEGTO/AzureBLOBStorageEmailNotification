@@ -3,7 +3,7 @@ using Azure.Communication.Email;
 using AzureEmailBLOBTrigger.Options;
 using Microsoft.Extensions.Options;
 
-namespace AzureEmailBLOBTrigger.Sevices
+namespace AzureEmailBLOBTrigger.Sevices.EmailNotificatorServices
 {
     public class EmailNotificator : IEmailNotificator
     {

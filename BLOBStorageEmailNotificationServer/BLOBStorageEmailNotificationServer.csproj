@@ -12,4 +12,8 @@
     <PackageReference Include="Fare" Version="2.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AzureEmailBLOBTriggerTests\AzureEmailBLOBTriggerTests.csproj" />
+  </ItemGroup>
+
 </Project>

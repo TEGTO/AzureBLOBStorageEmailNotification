@@ -1,6 +1,7 @@
 using Azure.Communication.Email;
 using AzureEmailBLOBTrigger.Options;
-using AzureEmailBLOBTrigger.Sevices;
+using AzureEmailBLOBTrigger.Sevices.CreateFileUriServices;
+using AzureEmailBLOBTrigger.Sevices.EmailNotificatorServices;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ var build = new HostBuilder()
         EmailClient emailClient = new EmailClient(emailOptions.EmailConnectionString);
         services.AddSingleton(emailClient);
         services.AddSingleton<IEmailNotificator, EmailNotificator>();
+        services.AddSingleton<ICreateFileUri, CreateFileSASUri>();
 
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();

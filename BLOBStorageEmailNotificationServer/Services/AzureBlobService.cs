@@ -32,7 +32,7 @@ namespace BLOBStorageEmailNotificationServer.Services
                 await blobClient.SetMetadataAsync(new Dictionary<string, string> { ["email"] = email });
             }
             else
-                throw new InvalidOperationException("Invalid file extension!");
+                throw new NotSupportedException("Invalid file extension!");
         }
         private bool FileValidation(IBrowserFile file)
         {

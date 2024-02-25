@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AzureEmailBLOBTrigger.Sevices
+namespace AzureEmailBLOBTrigger.Sevices.EmailNotificatorServices
 {
     public interface IEmailNotificator
     {
