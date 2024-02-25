@@ -100,7 +100,7 @@ namespace AzureEmailBLOBTrigger.Tests
             Assert.True(actualEmailBody.Contains(expectedEmailBody));
         }
         [Test]
-        public async Task Run_InValidRegex_SaveCurrentFileName()
+        public async Task Run_InValidRegex_NotChangedCurrentFileName()
         {
             // Arrange
             testFileName = "InavalidRegex123-@testfile.pdf";
@@ -124,7 +124,7 @@ namespace AzureEmailBLOBTrigger.Tests
             createFileUriMock.Verify(x => x.CreateFileUri(blobClientMock.Object, It.IsAny<EmailSendOptions>()), Times.Once);
         }
         [Test]
-        public async Task Run_CanNOTGenerateURI_GeneratedURI()
+        public async Task Run_CanNOTGenerateURI_URIGenerateError()
         {
             //Arrange
             createFileUriMock.Setup(x => x.CreateFileUri(It.IsAny<BlobClient>(), It.IsAny<EmailSendOptions>())).Throws(new InvalidOperationException("Error during uri generation!"));

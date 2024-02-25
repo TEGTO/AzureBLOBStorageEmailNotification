@@ -108,6 +108,7 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
         [Test]
         public void UploadFileAsync_InvalidBlobServiceClient_ThrowsNullReferenceException()
         {
+            //Arrange
             mockBlobServiceClient = new Mock<BlobServiceClient>();
             var azureBlobService = new AzureBlobService(mockBlobServiceClient.Object, mockOptions.Object);
             // Act
@@ -119,6 +120,7 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
         [Test]
         public void UploadFileAsync_InvalidAzureBlobServiceOptions_ThrowsNullReferenceException()
         {
+            //Arrange
             mockOptions = new Mock<IOptions<AzureBlobServiceOptions>>();
             var azureBlobService = new AzureBlobService(mockBlobServiceClient.Object, mockOptions.Object);
             // Act
