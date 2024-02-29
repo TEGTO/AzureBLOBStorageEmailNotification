@@ -5,7 +5,6 @@ using AzureEmailBLOBTrigger.Sevices.EmailNotificatorServices;
 using Microsoft.Extensions.Options;
 using Moq;
 
-
 namespace AzureEmailBLOBTrigger.Tests.Services
 {
     [TestFixture]
@@ -15,21 +14,21 @@ namespace AzureEmailBLOBTrigger.Tests.Services
         public async Task SendEmail_Success()
         {
             // Arrange
-            var emailClientMock = new Mock<EmailClient>();
-            var emailOptionsMock = new Mock<IOptions<EmailSendOptions>>();
+            var mockEmailClient = new Mock<EmailClient>();
+            var mockEmailOptions = new Mock<IOptions<EmailSendOptions>>();
             var emailOptions = new EmailSendOptions
             {
                 EmailFromAddress = "test@example.com"
             };
-            emailOptionsMock.Setup(x => x.Value).Returns(emailOptions);
-            var emailNotificator = new EmailNotificator(emailClientMock.Object, emailOptionsMock.Object);
+            mockEmailOptions.Setup(x => x.Value).Returns(emailOptions);
+            var emailNotificator = new EmailNotificator(mockEmailClient.Object, mockEmailOptions.Object);
             string email = "recipient@example.com";
             string title = "Test Email";
             string emailBody = "This is a test email.";
             // Act
             await emailNotificator.SendEmail(email, title, emailBody);
             // Assert
-            emailClientMock.Verify(x => x.SendAsync(
+            mockEmailClient.Verify(x => x.SendAsync(
                 It.IsAny<WaitUntil>(),
                 emailOptions.EmailFromAddress,
                 email,
@@ -43,21 +42,21 @@ namespace AzureEmailBLOBTrigger.Tests.Services
         public async Task SendEmail_NeverCall()
         {
             // Arrange
-            var emailClientMock = new Mock<EmailClient>();
-            var emailOptionsMock = new Mock<IOptions<EmailSendOptions>>();
+            var mockEmailClient = new Mock<EmailClient>();
+            var mockEmailOptions = new Mock<IOptions<EmailSendOptions>>();
             var emailOptions = new EmailSendOptions
             {
                 EmailFromAddress = "test@example.com"
             };
-            emailOptionsMock.Setup(x => x.Value).Returns(emailOptions);
-            var emailNotificator = new EmailNotificator(emailClientMock.Object, emailOptionsMock.Object);
+            mockEmailOptions.Setup(x => x.Value).Returns(emailOptions);
+            var emailNotificator = new EmailNotificator(mockEmailClient.Object, mockEmailOptions.Object);
             string email = "recipient@example.com";
             string title = "Test Email";
             string emailBody = "This is a test email.";
             // Act
             // We intentionally don't call the SendEmail method here
             // Assert
-            emailClientMock.Verify(x => x.SendAsync(
+            mockEmailClient.Verify(x => x.SendAsync(
                  It.IsAny<WaitUntil>(),
                 emailOptions.EmailFromAddress,
                 email,

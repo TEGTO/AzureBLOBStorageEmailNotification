@@ -6,7 +6,6 @@ using BLOBStorageEmailNotificationServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 var services = builder.Services;
 services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -32,7 +31,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
 

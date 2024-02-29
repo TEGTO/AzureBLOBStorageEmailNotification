@@ -13,7 +13,7 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
     public class AzureBlobServiceTests
     {
         private Mock<BlobServiceClient> mockBlobServiceClient;
-        private Mock<Response> rawResponse;
+        private Mock<Response> mockRawResponse;
         private Mock<IOptions<AzureBlobServiceOptions>> mockOptions;
         private Mock<IBrowserFile> mockFile;
 
@@ -24,7 +24,7 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
             var mockBlobContainerClient = new Mock<BlobContainerClient>();
             var mockBlobClient = new Mock<BlobClient>();
             var response = new Mock<Response<BlobContentInfo>>();
-            rawResponse = new Mock<Response>();
+            mockRawResponse = new Mock<Response>();
 
             mockBlobServiceClient.Setup(x => x.GetBlobContainerClient(It.IsAny<string>())).Returns(
                mockBlobContainerClient.Object);
@@ -34,9 +34,9 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
             mockBlobClient.Setup(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response.Object);
 
-            response.Setup(x => x.GetRawResponse()).Returns(rawResponse.Object);
+            response.Setup(x => x.GetRawResponse()).Returns(mockRawResponse.Object);
 
-            rawResponse.Setup(x => x.Status).Returns(201);
+            mockRawResponse.Setup(x => x.Status).Returns(201);
 
             mockOptions = new Mock<IOptions<AzureBlobServiceOptions>>();
             mockOptions.Setup(x => x.Value)
@@ -78,7 +78,7 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
         public void UploadFileAsync_ResponseError_ThrowsInvalidOperationException()
         {
             //Arrange
-            rawResponse.Setup(x => x.Status).Returns(400);
+            mockRawResponse.Setup(x => x.Status).Returns(400);
             var azureBlobService = new AzureBlobService(mockBlobServiceClient.Object, mockOptions.Object);
             // Act
             AsyncTestDelegate act = async () => await azureBlobService.UploadFileAsync(mockFile.Object, "test@example.com");

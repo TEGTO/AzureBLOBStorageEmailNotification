@@ -11,9 +11,9 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="title" class="form-label">Email:</label>
+                <label for="email" class="form-label">Email:</label>
                 <InputText id="email" @bind-Value="EmailModel.EmailAdress" class="form-control" />
-                <ValidationMessage For="() => EmailModel" class="text-danger" />
+                <ValidationMessage For="() => EmailModel.EmailAdress" class="text-danger" />
             </div>
             <div class="mb-3">
                 <label for="fileUpload" class="form-label">Upload .docx File:</label>
