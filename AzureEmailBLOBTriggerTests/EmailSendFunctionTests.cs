@@ -13,7 +13,7 @@ namespace AzureEmailBLOBTrigger.Tests
     {
         private Mock<ILogger<EmailSendFunction>> mockLogger;
         private Mock<IEmailNotificator> mockEmailNotificator;
-        private Mock<IOptions<EmailSendOptions>> mockConfiguration;
+        private Mock<IOptions<TriggerOptions>> mockConfiguration;
         private Mock<ICreateFileUri> mockCreateFileUri;
         private Mock<BlobClient> mockBlobClient;
         private Dictionary<string, string> metadata;
@@ -25,18 +25,18 @@ namespace AzureEmailBLOBTrigger.Tests
         {
             mockLogger = new Mock<ILogger<EmailSendFunction>>();
             mockEmailNotificator = new Mock<IEmailNotificator>();
-            mockConfiguration = new Mock<IOptions<EmailSendOptions>>();
+            mockConfiguration = new Mock<IOptions<TriggerOptions>>();
             metadata = new Dictionary<string, string> { { "email", "test@example.com" } };
             mockBlobClient = new Mock<BlobClient>();
             testFileName = "733736553832507-@testfile.pdf";
             mockCreateFileUri = new Mock<ICreateFileUri>();
 
-            mockCreateFileUri.Setup(x => x.CreateFileUri(It.IsAny<BlobClient>(), It.IsAny<EmailSendOptions>())).ReturnsAsync(new Uri("https://example.com/sasUri"));
+            mockCreateFileUri.Setup(x => x.CreateFileUri(It.IsAny<BlobClient>(), It.IsAny<TriggerOptions>())).ReturnsAsync(new Uri("https://example.com/sasUri"));
 
-            mockConfiguration.Setup(x => x.Value).Returns(new EmailSendOptions
+            mockConfiguration.Setup(x => x.Value).Returns(new TriggerOptions
             {
                 FileNameRegex = "\\d{15}-@",
-                EmailMessageExpirationHours = 24
+                MessageExpirationHours = 24
             });
             emailSendFunction = new EmailSendFunction(mockLogger.Object, mockEmailNotificator.Object, mockConfiguration.Object, mockCreateFileUri.Object);
         }
@@ -121,18 +121,18 @@ namespace AzureEmailBLOBTrigger.Tests
             // Act
             await emailSendFunction.Run(mockBlobClient.Object, testFileName, metadata);
             // Assert
-            mockCreateFileUri.Verify(x => x.CreateFileUri(mockBlobClient.Object, It.IsAny<EmailSendOptions>()), Times.Once);
+            mockCreateFileUri.Verify(x => x.CreateFileUri(mockBlobClient.Object, It.IsAny<TriggerOptions>()), Times.Once);
         }
         [Test]
         public async Task Run_CanNOTGenerateURI_URIGenerateError()
         {
             //Arrange
-            mockCreateFileUri.Setup(x => x.CreateFileUri(It.IsAny<BlobClient>(), It.IsAny<EmailSendOptions>())).Throws(new InvalidOperationException("Error during uri generation!"));
+            mockCreateFileUri.Setup(x => x.CreateFileUri(It.IsAny<BlobClient>(), It.IsAny<TriggerOptions>())).Throws(new InvalidOperationException("Error during uri generation!"));
             string expectedErrorMessage = $"Error occured with file '{testFileName}': Error during uri generation!";
             // Act
             await emailSendFunction.Run(mockBlobClient.Object, testFileName, metadata);
             // Assert
-            mockCreateFileUri.Verify(x => x.CreateFileUri(mockBlobClient.Object, It.IsAny<EmailSendOptions>()), Times.Once);
+            mockCreateFileUri.Verify(x => x.CreateFileUri(mockBlobClient.Object, It.IsAny<TriggerOptions>()), Times.Once);
             mockLogger.Verify(
               x => x.Log(
                  It.Is<LogLevel>(l => l == LogLevel.Error),

@@ -8,10 +8,10 @@ namespace BLOBStorageEmailNotificationServer.Services
 {
     public class AzureBlobService : IFileCloudManagerService
     {
-        private readonly AzureBlobServiceOptions configuration;
+        private readonly ServerOptions configuration;
         private readonly BlobServiceClient blobServiceClient;
 
-        public AzureBlobService(BlobServiceClient blobServiceClient, IOptions<AzureBlobServiceOptions> configuration)
+        public AzureBlobService(BlobServiceClient blobServiceClient, IOptions<ServerOptions> configuration)
         {
             this.blobServiceClient = blobServiceClient ?? throw new ArgumentNullException(nameof(blobServiceClient));
             this.configuration = configuration.Value;

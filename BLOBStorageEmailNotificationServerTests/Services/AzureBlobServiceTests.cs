@@ -14,7 +14,7 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
     {
         private Mock<BlobServiceClient> mockBlobServiceClient;
         private Mock<Response> mockRawResponse;
-        private Mock<IOptions<AzureBlobServiceOptions>> mockOptions;
+        private Mock<IOptions<ServerOptions>> mockOptions;
         private Mock<IBrowserFile> mockFile;
 
         [SetUp]
@@ -38,9 +38,9 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
 
             mockRawResponse.Setup(x => x.Status).Returns(201);
 
-            mockOptions = new Mock<IOptions<AzureBlobServiceOptions>>();
+            mockOptions = new Mock<IOptions<ServerOptions>>();
             mockOptions.Setup(x => x.Value)
-                      .Returns(new AzureBlobServiceOptions
+                      .Returns(new ServerOptions
                       {
                           ContainerName = "files",
                           MaxFileSize = 1024 * 1024 * 10,
@@ -90,7 +90,7 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
         public void UploadFileAsync_ExcessMaxSizeFileLimit_ThrowsInvalidOperationException()
         {
             //Arrange
-            mockOptions.Setup(x => x.Value).Returns(new AzureBlobServiceOptions
+            mockOptions.Setup(x => x.Value).Returns(new ServerOptions
             {
                 ContainerName = "files",
                 MaxFileSize = 1,
@@ -121,7 +121,7 @@ namespace BLOBStorageEmailNotificationServer.Tests.Services
         public void UploadFileAsync_InvalidAzureBlobServiceOptions_ThrowsNullReferenceException()
         {
             //Arrange
-            mockOptions = new Mock<IOptions<AzureBlobServiceOptions>>();
+            mockOptions = new Mock<IOptions<ServerOptions>>();
             var azureBlobService = new AzureBlobService(mockBlobServiceClient.Object, mockOptions.Object);
             // Act
             AsyncTestDelegate act = async () => await azureBlobService.UploadFileAsync(mockFile.Object, "test@example.com");

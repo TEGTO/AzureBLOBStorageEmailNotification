@@ -13,10 +13,10 @@ namespace AzureEmailBLOBTrigger
     {
         private readonly ILogger<EmailSendFunction> logger;
         private readonly IEmailNotificator emailNotificator;
-        private readonly EmailSendOptions configuration;
+        private readonly TriggerOptions configuration;
         private readonly ICreateFileUri createFileUri;
 
-        public EmailSendFunction(ILogger<EmailSendFunction> logger, IEmailNotificator emailNotificator, IOptions<EmailSendOptions> configuration, ICreateFileUri createFileUri)
+        public EmailSendFunction(ILogger<EmailSendFunction> logger, IEmailNotificator emailNotificator, IOptions<TriggerOptions> configuration, ICreateFileUri createFileUri)
         {
             this.logger = logger;
             this.emailNotificator = emailNotificator;

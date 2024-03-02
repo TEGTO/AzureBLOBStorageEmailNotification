@@ -15,8 +15,8 @@ namespace AzureEmailBLOBTrigger.Tests.Services
         {
             // Arrange
             var mockEmailClient = new Mock<EmailClient>();
-            var mockEmailOptions = new Mock<IOptions<EmailSendOptions>>();
-            var emailOptions = new EmailSendOptions
+            var mockEmailOptions = new Mock<IOptions<EmailServiceConnectionOptions>>();
+            var emailOptions = new EmailServiceConnectionOptions
             {
                 EmailFromAddress = "test@example.com"
             };
@@ -43,8 +43,8 @@ namespace AzureEmailBLOBTrigger.Tests.Services
         {
             // Arrange
             var mockEmailClient = new Mock<EmailClient>();
-            var mockEmailOptions = new Mock<IOptions<EmailSendOptions>>();
-            var emailOptions = new EmailSendOptions
+            var mockEmailOptions = new Mock<IOptions<EmailServiceConnectionOptions>>();
+            var emailOptions = new EmailServiceConnectionOptions
             {
                 EmailFromAddress = "test@example.com"
             };

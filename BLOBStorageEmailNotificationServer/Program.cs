@@ -1,5 +1,5 @@
-using Azure.Storage.Blobs;
 using Azure.Storage;
+using Azure.Storage.Blobs;
 using BLOBStorageEmailNotificationServer.Components;
 using BLOBStorageEmailNotificationServer.Options;
 using BLOBStorageEmailNotificationServer.Services;
@@ -7,15 +7,20 @@ using BLOBStorageEmailNotificationServer.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
+var configuration = builder.Configuration;
 services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var azureBlobServiceConfig = builder.Configuration.GetSection(AzureBlobServiceOptions.OptionPosition);
-services.Configure<AzureBlobServiceOptions>(azureBlobServiceConfig);
+var azureBlobServiceConfig = configuration.GetSection(ServerOptions.OptionPosition);
+services.Configure<ServerOptions>(azureBlobServiceConfig);
 
-var azureBlobServiceOptions = azureBlobServiceConfig.Get<AzureBlobServiceOptions>();
-var credential = new StorageSharedKeyCredential(azureBlobServiceOptions.StorageAccount, azureBlobServiceOptions.StorageAccessKey);
-var blobUri = $"https://{azureBlobServiceOptions.StorageAccount}.blob.core.windows.net";
+var storageConfig = configuration.GetSection(StorageConnectionOptions.OptionPosition);
+services.Configure<StorageConnectionOptions>(storageConfig);
+
+var storageOptions = storageConfig.Get<StorageConnectionOptions>();
+
+var credential = new StorageSharedKeyCredential(storageOptions.StorageAccount, storageOptions.StorageAccessKey);
+var blobUri = $"https://{storageOptions.StorageAccount}.blob.core.windows.net";
 var blobServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
 
 services.AddSingleton(blobServiceClient);

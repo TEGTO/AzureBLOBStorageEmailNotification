@@ -6,16 +6,25 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 var build = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
+     .ConfigureAppConfiguration(builder =>
+     {
+         builder.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+     })
     .ConfigureServices((hostContext, services) =>
     {
-        var emailConfig = hostContext.Configuration.GetSection(EmailSendOptions.OptionPosition);
-        services.Configure<EmailSendOptions>(emailConfig);
+        var triggerConfig = hostContext.Configuration.GetSection(TriggerOptions.OptionPosition);
+        services.Configure<TriggerOptions>(triggerConfig);
 
-        var emailOptions = emailConfig.Get<EmailSendOptions>();
+        var emailConfig = hostContext.Configuration.GetSection(EmailServiceConnectionOptions.OptionPosition);
+        services.Configure<EmailServiceConnectionOptions>(emailConfig);
+
+        var emailOptions = emailConfig.Get<EmailServiceConnectionOptions>();
         EmailClient emailClient = new EmailClient(emailOptions.EmailConnectionString);
+
         services.AddSingleton(emailClient);
         services.AddSingleton<IEmailNotificator, EmailNotificator>();
         services.AddSingleton<ICreateFileUri, CreateFileSASUri>();

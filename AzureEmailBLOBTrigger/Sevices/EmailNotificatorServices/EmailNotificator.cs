@@ -8,9 +8,9 @@ namespace AzureEmailBLOBTrigger.Sevices.EmailNotificatorServices
     public class EmailNotificator : IEmailNotificator
     {
         private readonly EmailClient emailClient;
-        private readonly EmailSendOptions configuration;
+        private readonly EmailServiceConnectionOptions configuration;
 
-        public EmailNotificator(EmailClient emailClient, IOptions<EmailSendOptions> configuration)
+        public EmailNotificator(EmailClient emailClient, IOptions<EmailServiceConnectionOptions> configuration)
         {
             this.configuration = configuration.Value;
             this.emailClient = emailClient;
